@@ -10,12 +10,10 @@ npm install -g serverless
 serverless config credentials --provider aws --key XXXX  --secret XXXXX -o
 ```
 
-##### Step 2:
+##### Step 2: When you submit job provides these conf
+![image](https://user-images.githubusercontent.com/39345855/218269150-3238ebed-18c5-4f38-8dc4-0b55d04fd5b0.png)
 ```
-When you submit job provides these conf
 --conf spark.jars=/usr/lib/hudi/hudi-spark-bundle.jar --conf spark.serializer=org.apache.spark.serializer.KryoSerializer
-
-
 ```
 
 
