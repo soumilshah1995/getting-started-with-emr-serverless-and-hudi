@@ -1,6 +1,8 @@
 
 # Getting started with emr serverless and hudi
-<img width="949" alt="Capture" src="https://user-images.githubusercontent.com/39345855/218268918-c059b8a0-73d2-43d2-9267-5e9e8ef7c23e.PNG">
+![image](https://user-images.githubusercontent.com/39345855/218269309-2bac2c12-e762-45fa-be06-39fe64f59522.png)
+
+
 
 # Phase 1 Create Hello world Hudi Transcation Datalake with EMR Serverless 
 ## Step 1 
