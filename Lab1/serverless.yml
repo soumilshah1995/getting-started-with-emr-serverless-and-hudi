@@ -1,0 +1,92 @@
+service: emr-serverless-hudi-demo
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  stackTags:
+    product: emr-serverless
+    env: qa
+    created-date: 2022-04-26
+    team: python-dev
+    customer-impact: false
+    terraform: false
+
+useDotenv: true
+
+resources:
+  Resources:
+    S3Bucket:
+      Type: 'AWS::S3::Bucket'
+      Properties:
+        BucketName: ${env:BucketName}
+
+    EMRServerlessS3RuntimeRole:
+      Type: 'AWS::IAM::Role'
+      Properties:
+        RoleName: ${env:RoleName}
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: "Allow"
+              Principal:
+                Service: "emr-serverless.amazonaws.com"
+              Action: 'sts:AssumeRole'
+
+    EMRServerlessS3AndGlueAccessPolicy:
+      Type: 'AWS::IAM::ManagedPolicy'
+      Properties:
+        ManagedPolicyName: ${env:ManagedPolicyName}
+        Description: EMRServerlessS3AndGlueAccessPolicy
+        Roles:
+          - !Ref EMRServerlessS3RuntimeRole
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Sid: ReadAccessForEMRSamples
+              Effect: "Allow"
+              Action:
+                - 's3:GetObject'
+                - 's3:ListBucket'
+              Resource:
+                - 'arn:aws:s3:::*.elasticmapreduce'
+                - 'arn:aws:s3:::*.elasticmapreduce/*'
+                - 'arn:aws:s3:::aws-data-analytics-workshops'
+                - 'arn:aws:s3:::aws-data-analytics-workshops/*'
+            - Sid: FullAccessToOutputBucket
+              Effect: Allow
+              Action:
+                - 's3:PutObject'
+                - 's3:GetObject'
+                - 's3:ListBucket'
+                - 's3:DeleteObject'
+              Resource:
+                - !Join
+                  - ''
+                  - - 'arn:aws:s3:::'
+                    - !Ref S3Bucket
+                - !Join
+                  - ''
+                  - - 'arn:aws:s3:::'
+                    - !Ref S3Bucket
+                    - /*
+            - Sid: GlueCreateAndReadDataCatalog
+              Effect: Allow
+              Action:
+                - 'glue:GetDatabase'
+                - 'glue:CreateDatabase'
+                - 'glue:GetDataBases'
+                - 'glue:CreateTable'
+                - 'glue:GetTable'
+                - 'glue:UpdateTable'
+                - 'glue:DeleteTable'
+                - 'glue:GetTables'
+                - 'glue:GetPartition'
+                - 'glue:GetPartitions'
+                - 'glue:CreatePartition'
+                - 'glue:DeletePartition'
+                - 'glue:BatchCreatePartition'
+                - 'glue:ListSchemas'
+                - 'glue:GetUserDefinedFunctions'
+              Resource:
+                - '*'
